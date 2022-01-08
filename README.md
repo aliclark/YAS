@@ -47,16 +47,17 @@ Hello(stdout, text)
 | or 16 options of fewer types. Just shift right to get the pointer back.
 | This assumes malloc alignment of 16 and minimum allocation is 2 longs.
 |
-| All variable assignments are local that specific block,
+| All variable assignments are immutable and local that specific block,
 | and only visible from that point onwards within the same block (including sub-blocks)
+| there is no shadowing allowed, including from pattern matching blocks
 
 
 | Conceptually, these should be thought as boring wrappers of their object
-Optionally: <result> / none
-Outcome: <result> / <error>
+Optionally :: <result> none
+Outcome :: <result> <error>
 
 | queue, text, etc. are methods taking no parameters which are found on context instance.
-Task(log, optionally, queue, text, value, box, cookie) <context>
+Task(log, optionally, queue, text, integer, box) <context>
 {
    | ditto but work and domain are on params
    prepare(work, domain) <params> {
@@ -74,13 +75,14 @@ Task(log, optionally, queue, text, value, box, cookie) <context>
       }
 
       | executes and matches work.assess()
-      | the compiler determines whether work.assess() does return a promise;
+      | the compiler determines whether work.assess() only returns a promise;
       | if so then the matching occurs asynchronously (out of scope).
       | Otherwise it is a compile-time error.
       | Other promises could be created but the 'of' statement won't await on them.
       of work.assess() {
          | these blocks are somewhat like a closure
-         | it is an error to use => return in these blocks; that's too confusing.
+         | it is an error to use => return in these blocks;
+         | that's too confusing because it is no longer in the prepare scope
          result {
             of work.triage(result) {
                result <deliverable> { work.plan(deliverable) }
@@ -99,16 +101,23 @@ Task(log, optionally, queue, text, value, box, cookie) <context>
          none { ok }
       }
 
-      if items.length().compareTo(work.custom()) {
+      if integer.compare(items.length(), work.custom()) {
          less { => optionally.result(res) }
-         greater / equal { ok }
+         greater equal { ok }
       }
 
+      | always list the most common cases first; the compiler won't re-order them.
+      | in the case of primitive like integer, "risks" and "priority" would refer to the same thing.
+      | this is unlike user types where the former would be the constructed type, and the latter
+      | would be the parameter for it
       if domain.challenges() <risks> {
-         0x00..0x29 / 0x40..0xff { => risks }
-         0x30..0x39 <priority> { => priority.plus(integer:1) }
+         0x40..0xff 0x00..0x29 { => risks }
+         0x30..0x39 <priority> { => integer.plus(priority, integer:1) }
       }
 
+      | until does not await, so can't be used directly on promises
+      | but you could iterate a list of promises and use an inner 'go' statement to await them.
+      | in that case, until will await each loop in turn.
       until none work.gather() {
          result { queue.add(result) }
       }
