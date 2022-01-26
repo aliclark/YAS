@@ -63,6 +63,7 @@ say Task(log, optionally, queue, text, integer, box)
       | executes and matches work.assess()
       | the compiler determines whether work.assess() could return or have created a promise;
       | if it's possible then 'prepare' is also an async method which awaits on the work.access() call
+      | and all promises that have been created during its execution
       | 'go' also creates a new memory arena which work.assess() and resulting code will allocate from
       | code in work.assess() can reference memory from prior arenas, but memory from prior arenas cannot
       | reference into a nested arena - instead memory must be copied or cloned backwards.
@@ -110,6 +111,7 @@ say Task(log, optionally, queue, text, integer, box)
       if domain.challenges() <risks>
          0x40..0xff 0x00..0x29 { => risks }
          0x30..0x39 <priority> { => integer.plus(priority, integer:1) }
+         -0x40000000..-0x01 0x0100..0x3fffffff { log.error(text:'Unexpected outcome {risks}') }
       fi
 
       | until does not await, so can't be used directly on promises
@@ -144,10 +146,11 @@ yas
 
 ```
 | user data type: defines one or more type constructors
-| class template: used to create a user-defined class by filling in zero or more context parameters
-| class: natively-defined class / user-defined class
+| class template: natively-defined class template / user-defined class template
+|   used to create a "class instance" by filling in zero or more context parameters
+| class instance: a class which is created at runtime using a class template
 | type constructor: a name for the constructor, and designates whether a parameter is optionally accepted
-| class constructor: an implicit method that accepts the instance parameters and returns a new instance of the class
+| class constructor: an implicit method of a class instance that accepts parameters and returns a new instance of that class
 | instantiation of a type:
 |   a constructed type whose constructor is runtime-discernable from the other constructors of the same type
 |   using pattern matching.
@@ -155,20 +158,20 @@ yas
 |   then a default is used instead, which is an instance of a class which has no methods
 | instance of a class;
 | thing: instance of a class / instantiation of a type / primitive
-| user-defined class: 
-|   defines parameters for the instance and its methods
-| natively-defined class:
-|   set of native functions to construct an instance and provide its methods.
-|   also describes its interface to the compiler
+| user-defined class template: 
+|   describes parameters for the instance and its methods
+| natively-defined class template:
+|   describes the native functions that will be methods of a class, and context parameters of the class
+|   completely describes its interface to the compiler for type-checking
 | primitive: opaque primitive / instance primitive
 | opaque primitive: integer (i31)
 |   these may be used in pattern matching as ranges
 | instance primitive:
 |   any other parsed value, such as a text string or list
-|   these may or may not be allowed for use in pattern matching
+|   these may or may not be allowed for use in pattern matching (if a full range could be described)
 |   these may or may not have methods implemented
 | pattern matching:
-|   exactly all possible cases must be matched against,
+|   has cases for exactly all possible outcomes,
 |   otherwise it is a compile time error.
 |   (it would be nice to allow only a subset of matching,
 |   but this adds too much syntactic and semantic complexity)
