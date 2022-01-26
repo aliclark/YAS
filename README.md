@@ -16,16 +16,17 @@ yas
 
 The language aesthetic could be described broadly by the phrases "economy of mechanism" and "low conceptual volume".
 
-To this end, the language uses: composition, immutable non-shadowable variables, garbage collection, object-orientatated programming for encapsulating state, nil global state, structural typing with compile-time checks, plain data types with run-time checks, single-threaded execution and asynchronicity via promises, iterable data type for loop iteration, outcome data type for error handling, pass by reference with the exception of a primitive small integer type, pass parameters by position and/or by name, but no rest or dictionary parameters
+To this end, the language uses: composition, immutable non-shadowable variables, garbage collection, object-orientatated programming for encapsulating state, nil global state, structural typing with compile-time checks, plain data types with run-time checks, single-threaded execution and asynchronicity via promises, loop for iteration with iterable data type, outcome data type for handling error cases, pass by reference with the exception of a primitive small integer type, pass parameters by position and/or by name, but no rest or dictionary parameters
 
 Everything expressible in the language is expressed in terms of these concepts.
 
 ### To map closely to modern computer hardware:
 
 * Small arena-based memory allocation and collection (a few MB is commensurate with current cache sizes)
-* 32-bit references to reduce memory cache usage
+* Classes are created at runtime to reduce the need for instance fields, reducing memory cache usage
+* 32-bit references reduce memory cache usage
 * Aligning memory allocations to 8-byte boundaries allows tagging the lowest 3-bits of a pointer/primitive
-  could be used to indicate which of 8 possible data type options have occurred at runtime, including small integers
+  could be used to indicate which of 8 possible data type options have occurred at runtime
 * Idiomatic use of simple data type matching may lend itself better to O(1) jump tables in conditionals,
   compared to if-else chains.
 
