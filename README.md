@@ -41,9 +41,9 @@ Everything expressible in the language is expressed in terms of these concepts.
 It's a non-goal to create libraries for linking into other languages the only is to create application binaries only.
 
 For simplicity the initial goal will be to first to write a compiler in TypeScript, which is very high level and should be quick to achieve.
-Then port the compiler from TypeScript to Solo, using the TypeScript source code as a bootstrap.
+Then port the compiler from TypeScript to be self-hosted, using the TypeScript source code as a bootstrap.
 Then using that compiler, target portable C code.
-Then to start adding specialisations, eg. custom calling conventions in hand-coded assembly if the target is amd64 or aarch64.
+Then start adding specialisations, eg. custom calling conventions and hand-coded assembly if the target is either aarch64 or amd64.
 
 ### Example
 
