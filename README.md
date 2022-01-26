@@ -16,7 +16,7 @@ yas
 
 The language aesthetic could be described broadly by the phrases "economy of mechanism" and "low conceptual volume".
 
-To this end, the language uses: composition, immutable non-shadowable variables, garbage collection, object-orientatated programming for encapsulating state, nil global state, structural typing with compile-time checks, plain data types with run-time checks, single-threaded execution and asynchronicity via promises, loop for iteration with iterable data type, outcome data type for handling error cases, pass by reference with the exception of a primitive small integer type, pass parameters by position and/or by name, but no rest or dictionary parameters
+To this end, the language uses: composition, immutable non-shadowable variables, garbage collection, object-orientatated programming for encapsulating state, nil global state, structural typing with compile-time checks, plain data types with run-time checks, single-threaded execution and asynchronicity via promises, iterable data type for loop iteration, outcome data type for error handling, pass by reference with the exception of a primitive small integer type, pass parameters by position and/or by name, but no rest or dictionary parameters
 
 Everything expressible in the language is expressed in terms of these concepts.
 
