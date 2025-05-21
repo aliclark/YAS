@@ -12,6 +12,8 @@ say Hello(stdout, text)
 yas
 ```
 
+Edit: revisiting this language design I'm not convinced it's worth implementing. The goal was to make something like a hybrid of Java 6 and Javascript with constructor dependency injection only, aiming at utter conceptual simplicity while still being usable for building large software systems.
+
 # Aims
 
 The language aesthetic could be described broadly by the phrases "economy of mechanism" and "low conceptual volume".
@@ -23,6 +25,7 @@ Everything expressible in the language is expressed in terms of these concepts.
 ### To map closely to modern computer hardware:
 
 * Small arena-based memory allocation and collection (a few MB is commensurate with current cache sizes)
+  * Edit: when revisiting the design, I couldn't find a way to get make arena memory system to work well. I think if trying to implement this I would use a copy-GC for its conceptual simplicity
 * Classes are created at runtime to reduce the need for instance fields, reducing memory cache usage
 * 32-bit references reduce memory cache usage
 * Aligning memory allocations to 8-byte boundaries allows tagging the lowest 3-bits of a pointer/primitive
